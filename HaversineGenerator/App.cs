@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 
 using HaversineShared;
-using System.Security.Cryptography;
 
 public class RandomSeed
 {
@@ -91,9 +90,6 @@ internal sealed class App
 
     public async Task RunAsync(string[] args)
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
-        Console.WriteLine("Usage haversine_generator [uniform/cluster] [random seed] [number of coordinate pairs to generate]");
-
         if(args.Length == 3)
         {
             UInt64 ClusterCountLeft = System.UInt64.MaxValue;
@@ -165,6 +161,7 @@ internal sealed class App
                     await answerStream.WriteAsync(BitConverter.GetBytes(HaversineDistance));
                 }
                 await jsonStream.WriteAsync($"\t]\n}}");
+                await answerStream.WriteAsync(BitConverter.GetBytes(Sum));
 
                 Console.WriteLine("");
                 Console.WriteLine($"Method: {MethodName}");

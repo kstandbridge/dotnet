@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaversineShared", "Haversin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaversineGenerator", "HaversineGenerator\HaversineGenerator.csproj", "{84CCB2CA-97A0-4D3F-AD7C-3862744B010D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaversineProcessor", "HaversineProcessor\HaversineProcessor.csproj", "{3898815D-2041-4AE5-A6E2-B7C6A3B3F7E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{84CCB2CA-97A0-4D3F-AD7C-3862744B010D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84CCB2CA-97A0-4D3F-AD7C-3862744B010D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84CCB2CA-97A0-4D3F-AD7C-3862744B010D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3898815D-2041-4AE5-A6E2-B7C6A3B3F7E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3898815D-2041-4AE5-A6E2-B7C6A3B3F7E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3898815D-2041-4AE5-A6E2-B7C6A3B3F7E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3898815D-2041-4AE5-A6E2-B7C6A3B3F7E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
