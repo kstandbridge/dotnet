@@ -11,6 +11,6 @@ builder.Services.AddSingleton<App>();
 using IHost host = builder.Build();
 
 App? app = host.Services.GetService<App>();
-await app!.RunAsync();
+await app!.RunAsync(args);
 
 // await host.RunAsync();
