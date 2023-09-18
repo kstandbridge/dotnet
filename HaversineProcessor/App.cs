@@ -133,8 +133,6 @@ internal sealed class App
             PairIndex < pairs.Count;
             ++PairIndex)
         {
-            using ProfileBlock PairBlock = new ProfileBlock(0, "SumPair");
-
             HaversinePair Pair = pairs[PairIndex];
             Double Distance = _formula.Reference(Pair.X0, Pair.Y0, Pair.X1, Pair.Y1);
             Result += SumCoef*Distance;

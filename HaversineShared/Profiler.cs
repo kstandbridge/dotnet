@@ -1,7 +1,11 @@
+#define PROFILING
+
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace HaversineShared;
+
+#if PROFILING
 
 public class ProfileAnchor
 {
@@ -33,7 +37,7 @@ public class ProfileBlock : IDisposable
 
         return Result;
     }
-    
+
     public ProfileBlock(Int64 ByteCount = 0,
                         [CallerMemberName]string Label = "",
                         [CallerFilePath]string Path = "",
@@ -71,6 +75,7 @@ public class ProfileBlock : IDisposable
         Anchor.Label = _label;
     }
 }
+
 public static class Profiler
 {
     public static ProfileAnchor[] Anchors = new ProfileAnchor[4096];
@@ -117,7 +122,7 @@ public static class Profiler
                     Double Megabyte = 1024.0d*1024.0d;
                     Double Gigabyte = Megabyte*1024.0d;
 
-                    Double Seconds = (Double)Anchor.TSCElapsedInclusive / (Double)Stopwatch.Frequency*1000d;
+                    Double Seconds = (Double)Anchor.TSCElapsedInclusive / (Double)Stopwatch.Frequency;
                     Double BytesPerSecond = (Double)Anchor.ProcessedByteCount / Seconds;
                     Double Megabytes = (Double)Anchor.ProcessedByteCount / (Double)Megabyte;
                     Double GigabytesPerSecond = BytesPerSecond / Gigabyte;
@@ -131,3 +136,39 @@ public static class Profiler
         }
     }
 }
+
+#else
+
+public class ProfileBlock : IDisposable
+{
+    public ProfileBlock(params object[] _)
+    {
+    }
+
+    public void Dispose()
+    {
+    }
+}
+
+public static class Profiler
+{
+    private static Int64 _startTimestamp;
+    private static Int64 _endTimestamp;
+
+    public static void BeginProfile()
+    {
+        _startTimestamp = Stopwatch.GetTimestamp();
+    }
+
+    public static void EndAndPrintProfile()
+    {
+        _endTimestamp = Stopwatch.GetTimestamp();
+        Int64 TotalElapsed = _endTimestamp - _startTimestamp;
+
+        Console.WriteLine("");
+        Console.WriteLine($"Total time: {(Double)TotalElapsed/(Double)Stopwatch.Frequency*1000d:F4}ms");
+        Console.WriteLine("");
+    }
+}
+
+#endif
