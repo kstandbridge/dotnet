@@ -146,8 +146,6 @@ internal sealed class App
 
     public async Task RunAsync(string[] args)
     {
-        Console.WriteLine("");
-
         Profiler.BeginProfile();
 
         if((args.Length == 1) || (args.Length == 2))
