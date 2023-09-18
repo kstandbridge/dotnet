@@ -1,8 +1,10 @@
 using HaversineShared;
 
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
+[StructLayout(LayoutKind.Sequential)]
 public class HaversinePair
 {
     public Double X0;
@@ -124,7 +126,8 @@ internal sealed class App
 
     private Double SumHaversineDistances(List<HaversinePair> pairs)
     {
-        using ProfileBlock FuncBlock = new ProfileBlock();
+        int Size = Marshal.SizeOf<HaversinePair>();
+        using ProfileBlock FuncBlock = new ProfileBlock(pairs.Count * Size);
 
         Double Result = 0;
 

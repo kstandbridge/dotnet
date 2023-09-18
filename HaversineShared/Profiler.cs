@@ -102,7 +102,6 @@ public static class Profiler
 
         Console.WriteLine("");
         Console.WriteLine($"Total time: {(Double)TotalElapsed/(Double)Stopwatch.Frequency*1000d:F4}ms");
-        Console.WriteLine("");
 
         foreach(ProfileAnchor Anchor in Profiler.Anchors)
         {
@@ -129,7 +128,6 @@ public static class Profiler
 
                     Console.Write($"\t{Megabytes:F3}mb at {GigabytesPerSecond:F2}gb/s");
                 }
-
 
                 Console.WriteLine("");
             }
