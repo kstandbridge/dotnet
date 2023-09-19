@@ -65,13 +65,11 @@ internal sealed class App
         return result;
     }
         
-    private List<HaversinePair> ParseHaversinePairs(string jsonPath)
+    private List<HaversinePair> ParseHaversinePairs(byte[] bytes)
     {
-        using ProfileBlock profileBlock = new ProfileBlock();
+        using ProfileBlock profileBlock = new ProfileBlock(bytes.Length);
 
         List<HaversinePair> result = new List<HaversinePair>();
-
-        byte[] bytes = ReadEntireFile(jsonPath);
 
         MemoryStream memoryStream = new MemoryStream(bytes);
         Utf8JsonReader jsonReader = new Utf8JsonReader(bytes, isFinalBlock: false, state: default);
@@ -79,7 +77,7 @@ internal sealed class App
         while(jsonReader.Read())
         {
             if((jsonReader.TokenType == JsonTokenType.PropertyName) &&
-                (jsonReader.ValueTextEquals("pairs")))
+               (jsonReader.ValueTextEquals("pairs")))
             {
                 HaversinePair currentPair = null;
                 while(jsonReader.Read())
@@ -115,9 +113,7 @@ internal sealed class App
                             }
                         }
                     }
-
                 }
-
             }
         }
         
@@ -152,18 +148,18 @@ internal sealed class App
         {
             if(File.Exists(args[0]))
             {
-                FileInfo fileInfo = new FileInfo(args[0]);
+                byte[] bytes = ReadEntireFile(args[0]);
                 
-                List<HaversinePair> pairs = ParseHaversinePairs(args[0]);
+                List<HaversinePair> pairs = ParseHaversinePairs(bytes);
                 
                 Double Sum = SumHaversineDistances(pairs);
-                Console.WriteLine($"Input size: {fileInfo.Length}");
+                Console.WriteLine($"Input size: {bytes.Length}");
                 Console.WriteLine($"Pair count: {pairs.Count}");
                 Console.WriteLine($"Haversine sum: {Sum}");
 
                 if(args.Length == 2)
                 {
-                    fileInfo = new FileInfo(args[1]);
+                    FileInfo fileInfo = new FileInfo(args[1]);
 
                     using ProfileBlock ProflileValidation = new ProfileBlock(fileInfo.Length, "Validation");
 
