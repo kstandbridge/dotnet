@@ -107,19 +107,19 @@ public static class Profiler
         {
             if(Anchor.TSCElapsedInclusive > 0)
             {
-                double Percent = 100.0d * ((Double)Anchor.TSCElapsedExclusive) / ((Double)TotalElapsed);
+                double Percent = 100.0f * ((Double)Anchor.TSCElapsedExclusive) / ((Double)TotalElapsed);
                 Console.Write($"\t{Anchor.Label}[{Anchor.HitCount}]: {Anchor.TSCElapsedExclusive} ({Percent:F2}%");
                 if(Anchor.TSCElapsedInclusive != Anchor.TSCElapsedExclusive)
                 {
-                    Double PercentWithChildren = 100.0d * ((Double)Anchor.TSCElapsedInclusive / (Double)TotalElapsed);
+                    Double PercentWithChildren = 100.0f * ((Double)Anchor.TSCElapsedInclusive / (Double)TotalElapsed);
                     Console.Write($", {PercentWithChildren:F2}% w/children");
                 }
                 Console.Write(")");
 
                 if(Anchor.ProcessedByteCount > 0)
                 {
-                    Double Megabyte = 1024.0d*1024.0d;
-                    Double Gigabyte = Megabyte*1024.0d;
+                    Double Megabyte = 1024.0f*1024.0f;
+                    Double Gigabyte = Megabyte*1024.0f;
 
                     Double Seconds = (Double)Anchor.TSCElapsedInclusive / (Double)Stopwatch.Frequency;
                     Double BytesPerSecond = (Double)Anchor.ProcessedByteCount / Seconds;
@@ -164,7 +164,7 @@ public static class Profiler
         Int64 TotalElapsed = _endTimestamp - _startTimestamp;
 
         Console.WriteLine("");
-        Console.WriteLine($"Total time: {(Double)TotalElapsed/(Double)Stopwatch.Frequency*1000d:F4}ms");
+        Console.WriteLine($"Total time: {(Double)TotalElapsed/(Double)Stopwatch.Frequency*1000f:F4}ms");
         Console.WriteLine("");
     }
 }
