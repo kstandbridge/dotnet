@@ -168,7 +168,7 @@ public class RepetitionTester
             }
         }
 
-        _tryForTime = secondsToTry*Stopwatch.Frequency/1000;
+        _tryForTime = secondsToTry*Stopwatch.Frequency;
         _testsStartedAt = Stopwatch.GetTimestamp();
     }
 }
