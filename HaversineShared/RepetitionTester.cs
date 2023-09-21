@@ -41,7 +41,7 @@ public class RepetitionTester
 
     private void PrintTime(string label, Double time, UInt64 byteCount)
     {
-        Console.Write($"{label}: {time}");
+        Console.Write($"{label}: {time:F0}");
         Double Miliseconds = time / Stopwatch.Frequency;
         Console.Write($" ({Miliseconds*1000.0d:F2}ms)");
 
