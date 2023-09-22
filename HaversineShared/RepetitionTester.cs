@@ -121,14 +121,34 @@ public class RepetitionTester
         _testsStartedAt = Stopwatch.GetTimestamp();
     }
 
+    [StructLayout(LayoutKind.Sequential, Size=72)]
+    private struct PROCESS_MEMORY_COUNTERS
+    {
+        public uint cb;
+        public uint PageFaultCount;
+        public UInt64 PeakWorkingSetSize;
+        public UInt64 WorkingSetSize;
+        public UInt64 QuotaPeakPagedPoolUsage;
+        public UInt64 QuotaPagedPoolUsage;
+        public UInt64 QuotaPeakNonPagedPoolUsage;
+        public UInt64 QuotaNonPagedPoolUsage;
+        public UInt64 PagefileUsage;
+        public UInt64 PeakPagefileUsage;
+    }
 
-    public struct timeval
+    [DllImport("psapi.dll", SetLastError=true)]
+    private static extern bool GetProcessMemoryInfo(IntPtr hProcess, out PROCESS_MEMORY_COUNTERS counters, uint size);
+    
+    [DllImport("kernel32.dll")]
+    private static extern IntPtr GetCurrentProcess();
+
+    private struct timeval
     {
         UInt64 tv_sec;     /* seconds */
         UInt64 tv_usec;    /* microseconds */
     };
     
-    public struct rusage 
+    private struct rusage 
     {
         public timeval ru_utime; /* user CPU time used */
         public timeval ru_stime; /* system CPU time used */
@@ -149,7 +169,7 @@ public class RepetitionTester
     };
     
     [DllImport("libc")]
-    public static extern int getrusage(int who, out rusage usage);
+    private static extern int getrusage(int who, out rusage usage);
 
     private Int32 ReadOSPageFaultCount()
     {
@@ -157,8 +177,14 @@ public class RepetitionTester
 
         if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            // TODO(kstandbridge): Get fault count win32
-            Result = 0;
+
+            IntPtr currentProcessHandle = GetCurrentProcess();
+            PROCESS_MEMORY_COUNTERS memoryCounters = new PROCESS_MEMORY_COUNTERS
+            {
+                cb = (uint)Marshal.SizeOf(typeof(PROCESS_MEMORY_COUNTERS)),
+            };
+            GetProcessMemoryInfo(currentProcessHandle, out memoryCounters, memoryCounters.cb);
+            Result = (Int32)memoryCounters.PageFaultCount;
         }
         else if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
