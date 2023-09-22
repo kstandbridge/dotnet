@@ -14,6 +14,35 @@ public interface IReadVia
     public RepetitionTester RepetitionTester { get; }
 }
 
+public class WriteToAllBytes : IReadVia
+{
+    public RepetitionTester RepetitionTester { get; private set; }
+
+    public WriteToAllBytes(RepetitionTester repetitionTester)
+    {
+        RepetitionTester = repetitionTester;
+    }
+
+    public string Name => "WriteAllBytes";
+
+    public void Read(ReadParameters readParameters)
+    {
+        while (RepetitionTester.IsTesting())
+        {
+            RepetitionTester.BeginTime();
+            for(Int64 Index = 0;
+                Index < readParameters.Dest.Length;
+                ++Index)
+            {
+                readParameters.Dest[Index] = (byte)Index;
+            }
+            RepetitionTester.EndTime();
+
+            RepetitionTester.CountBytes((Int64)readParameters.Dest.Length);
+        }
+    }
+}
+
 public class ReadViaFile: IReadVia
 {
     public RepetitionTester RepetitionTester { get; private set; }
@@ -33,7 +62,7 @@ public class ReadViaFile: IReadVia
             readParameters.Dest = File.ReadAllBytes(readParameters.FileName);
             RepetitionTester.EndTime();
 
-            RepetitionTester.CountBytes((UInt64)readParameters.Dest.Length);
+            RepetitionTester.CountBytes((Int64)readParameters.Dest.Length);
         }
     }
 }
@@ -59,7 +88,7 @@ public class ReadViaFileStream : IReadVia
             fileStream.Read(readParameters.Dest);
             RepetitionTester.EndTime();
 
-            RepetitionTester.CountBytes((UInt64)fileStream.Length);
+            RepetitionTester.CountBytes((Int64)fileStream.Length);
         }
     }
 }
@@ -89,6 +118,7 @@ internal class Program
 
             IReadVia[] testers = new IReadVia[]
             {
+                new WriteToAllBytes(new RepetitionTester()),
                 new ReadViaFile(new RepetitionTester()),
                 new ReadViaFileStream(new RepetitionTester())
             };
@@ -98,7 +128,7 @@ internal class Program
                 foreach(IReadVia tester in testers)
                 {
                     Console.Write($"\n--- {tester.Name} ---\n");
-                    tester.RepetitionTester.NewTestWave((UInt64)readParameters.Dest.Length);
+                    tester.RepetitionTester.NewTestWave((Int64)readParameters.Dest.Length);
                     tester.Read(readParameters);
                 }
             }
