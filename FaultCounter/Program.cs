@@ -43,52 +43,31 @@ public class WriteToAllBytes : IReadVia
     }
 }
 
-public class ReadViaFile: IReadVia
+public class WriteToAllBytesBackwards : IReadVia
 {
     public RepetitionTester RepetitionTester { get; private set; }
 
-    public ReadViaFile(RepetitionTester repetitionTester)
+    public WriteToAllBytesBackwards(RepetitionTester repetitionTester)
     {
         RepetitionTester = repetitionTester;
     }
 
-    public string Name => "File";
+    public string Name => "WriteToAllBytesBackwards";
 
     public void Read(ReadParameters readParameters)
     {
         while (RepetitionTester.IsTesting())
         {
             RepetitionTester.BeginTime();
-            readParameters.Dest = File.ReadAllBytes(readParameters.FileName);
+            for(Int64 Index = 0;
+                Index < readParameters.Dest.Length;
+                ++Index)
+            {
+                readParameters.Dest[(readParameters.Dest.Length - Index - 1)] = (byte)Index;
+            }
             RepetitionTester.EndTime();
 
             RepetitionTester.CountBytes((Int64)readParameters.Dest.Length);
-        }
-    }
-}
-
-public class ReadViaFileStream : IReadVia
-{
-    public RepetitionTester RepetitionTester { get; private set; }
-
-    public ReadViaFileStream(RepetitionTester repetitionTester)
-    {
-        RepetitionTester = repetitionTester;
-    }
-
-    public string Name => "FileStream";
-
-    public void Read(ReadParameters readParameters)
-    {
-        while (RepetitionTester.IsTesting())
-        {
-            using FileStream fileStream = File.OpenRead(readParameters.FileName);
-
-            RepetitionTester.BeginTime();
-            fileStream.Read(readParameters.Dest);
-            RepetitionTester.EndTime();
-
-            RepetitionTester.CountBytes((Int64)fileStream.Length);
         }
     }
 }
@@ -104,38 +83,26 @@ internal class Program
 
         ILogger<Program> _logger = loggerFactory.CreateLogger<Program>();
 
-        if (args.Length == 1)
+        ReadParameters readParameters = new ReadParameters
         {
-            string fileName = args[0];
-            FileInfo fileInfo = new FileInfo(fileName);
+            Dest = new byte[1024*1024*1024],
+            FileName = "/dev/null"
+        };
 
-            ReadParameters readParameters = new ReadParameters
-            {
-                Dest = new byte[fileInfo.Length],
-                FileName = fileName
-            };
+        IReadVia[] testers = new IReadVia[]
+        {
+            new WriteToAllBytes(new RepetitionTester()),
+            new WriteToAllBytesBackwards(new RepetitionTester()),
+        };
 
-            IReadVia[] testers = new IReadVia[]
+        for(;;)
+        {
+            foreach(IReadVia tester in testers)
             {
-                new WriteToAllBytes(new RepetitionTester()),
-                new ReadViaFile(new RepetitionTester()),
-                new ReadViaFileStream(new RepetitionTester())
-            };
-
-            for(;;)
-            {
-                foreach(IReadVia tester in testers)
-                {
-                    Console.Write($"\n--- {tester.Name} ---\n");
-                    tester.RepetitionTester.NewTestWave((Int64)readParameters.Dest.Length);
-                    tester.Read(readParameters);
-                }
+                Console.Write($"\n--- {tester.Name} ---\n");
+                tester.RepetitionTester.NewTestWave((Int64)readParameters.Dest.Length);
+                tester.Read(readParameters);
             }
         }
-        else
-        {
-            _logger.LogError("Usage: {AppName} [input file]", AppDomain.CurrentDomain.FriendlyName);
-        }
-
     }
 }

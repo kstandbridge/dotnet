@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaversineProcessor", "Haver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadOverhead", "ReadOverhead\ReadOverhead.csproj", "{4504567C-526B-477E-A15F-1DF92AEE4EE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaultCounter", "FaultCounter\FaultCounter.csproj", "{799F5144-8CDB-4A3E-871A-E361A822EF39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{4504567C-526B-477E-A15F-1DF92AEE4EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4504567C-526B-477E-A15F-1DF92AEE4EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4504567C-526B-477E-A15F-1DF92AEE4EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{799F5144-8CDB-4A3E-871A-E361A822EF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{799F5144-8CDB-4A3E-871A-E361A822EF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{799F5144-8CDB-4A3E-871A-E361A822EF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{799F5144-8CDB-4A3E-871A-E361A822EF39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
